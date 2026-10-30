@@ -1,0 +1,243 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#101b35">
+<meta name="description" content="جاب الغنانيم - اكتشف أفضل عروض المطاعم والمقاهي اليومية والأسبوعية في السعودية.">
+<title>جاب الغنانيم | Jab Al-Ghanaim</title>
+<style>
+:root {
+  --navy:#101b35;
+  --navy2:#19294a;
+  --gold:#d7ad55;
+  --white:#ffffff;
+  --bg:#f5f6fa;
+  --muted:#788197;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,Tahoma,sans-serif;
+  background:var(--bg);
+  color:var(--navy);
+}
+header{
+  background:var(--navy);
+  color:white;
+  padding:17px 6%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:12px;
+}
+.logo{font-size:22px;font-weight:bold}
+.logo span{color:var(--gold)}
+button,a{cursor:pointer}
+.lang{
+  background:transparent;
+  border:1px solid var(--gold);
+  color:var(--gold);
+  padding:9px 15px;
+  border-radius:9px;
+}
+.hero{
+  background:linear-gradient(135deg,var(--navy),var(--navy2));
+  color:white;
+  text-align:center;
+  padding:75px 20px 85px;
+}
+.hero h1{font-size:36px;margin:0 0 15px}
+.hero h1 span{color:var(--gold)}
+.hero p{
+  color:#d6dbea;
+  font-size:17px;
+  line-height:1.9;
+  max-width:650px;
+  margin:0 auto 25px;
+}
+.actions{
+  display:flex;
+  justify-content:center;
+  gap:12px;
+  flex-wrap:wrap;
+}
+.btn{
+  display:inline-block;
+  text-decoration:none;
+  border-radius:9px;
+  padding:13px 22px;
+  font-weight:bold;
+}
+.primary{background:var(--gold);color:var(--navy)}
+.secondary{border:1px solid white;color:white}
+.container{max-width:1100px;margin:auto;padding:35px 18px}
+.section-title{text-align:center;margin-bottom:25px}
+.section-title h2{font-size:25px;margin-bottom:8px}
+.section-title p{color:var(--muted)}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:16px;
+}
+.card{
+  background:white;
+  border-radius:15px;
+  padding:23px;
+  box-shadow:0 5px 20px #101b3510;
+  text-align:center;
+}
+.card .emoji{font-size:37px}
+.card h3{margin:12px 0 7px}
+.card p{color:var(--muted);line-height:1.7;font-size:14px}
+.join{
+  background:var(--navy);
+  color:white;
+  text-align:center;
+  padding:45px 20px;
+  border-radius:18px;
+  margin-top:15px;
+}
+.join h2{color:var(--gold)}
+.join p{color:#d6dbea;line-height:1.8}
+footer{
+  background:#0b1429;
+  color:#bfc8da;
+  text-align:center;
+  padding:22px;
+  font-size:13px;
+}
+footer span{color:var(--gold)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">جاب <span>الغنانيم</span> ✦</div>
+  <button class="lang" onclick="toggleLanguage()">English</button>
+</header>
+
+<section class="hero">
+  <h1 id="heroTitle">اكتشف <span>الغنيمة</span> اليوم!</h1>
+  <p id="heroDesc">
+    كل عروض المطاعم والمقاهي في مكان واحد.
+    اكتشف الصفقات المميزة واستمتع بتوفير أكبر.
+  </p>
+  <div class="actions">
+    <a href="#offers" class="btn primary" id="browseBtn">اكتشف العروض</a>
+    <a href="#join" class="btn secondary" id="joinBtn">سجّل مطعمك مجاناً</a>
+  </div>
+</section>
+
+<main class="container">
+  <section id="offers">
+    <div class="section-title">
+      <h2 id="offersTitle">اكتشف أقسام العروض</h2>
+      <p id="offersDesc">اختر القسم الذي يناسبك</p>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <div class="emoji">🔥</div>
+        <h3 id="daily">عروض اليوم</h3>
+        <p id="dailyDesc">اكتشف الصفقات اليومية المميزة.</p>
+      </div>
+      <div class="card">
+        <div class="emoji">📅</div>
+        <h3 id="weekly">العروض الأسبوعية</h3>
+        <p id="weeklyDesc">فرص توفير جديدة كل أسبوع.</p>
+      </div>
+      <div class="card">
+        <div class="emoji">🍔</div>
+        <h3 id="restaurants">المطاعم</h3>
+        <p id="restaurantsDesc">عروض المطاعم والوجبات.</p>
+      </div>
+      <div class="card">
+        <div class="emoji">☕</div>
+        <h3 id="cafes">المقاهي</h3>
+        <p id="cafesDesc">القهوة والحلويات والمشروبات.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="join" class="join">
+    <h2 id="joinTitle">هل تملك مطعماً أو مقهى؟</h2>
+    <p id="joinDesc">
+      انضم إلى جاب الغنانيم واعرض عروضك أمام عملاء جدد.
+      التسجيل الأساسي مجاني.
+    </p>
+    <a href="mailto:contact@jab-alghanaim.com"
+       class="btn primary" id="contactBtn">تواصل معنا</a>
+  </section>
+</main>
+
+<footer>
+  <span>جاب الغنانيم ✦</span>
+  <p id="footerText">كل العروض، في مكان واحد.</p>
+  © <span id="year"></span> Jab Al-Ghanaim
+</footer>
+
+<script>
+let english = false;
+
+const translations = {
+  heroTitle:'Discover the <span>Best Deals</span> Today!',
+  heroDesc:'Restaurant and cafe deals all in one place. Discover great offers and save more.',
+  browseBtn:'Explore Deals',
+  joinBtn:'Register Your Restaurant',
+  offersTitle:'Explore Deal Categories',
+  offersDesc:'Choose your favorite category',
+  daily:'Today’s Deals',
+  dailyDesc:'Discover exciting daily offers.',
+  weekly:'Weekly Deals',
+  weeklyDesc:'New savings opportunities every week.',
+  restaurants:'Restaurants',
+  restaurantsDesc:'Restaurant and meal offers.',
+  cafes:'Cafes',
+  cafesDesc:'Coffee, desserts and drinks.',
+  joinTitle:'Do you own a restaurant or cafe?',
+  joinDesc:'Join Jab Al-Ghanaim and showcase your offers to new customers. Basic registration is free.',
+  contactBtn:'Contact Us',
+  footerText:'All the deals, in one place.'
+};
+
+const arabic = {
+  heroTitle:'اكتشف <span>الغنيمة</span> اليوم!',
+  heroDesc:'كل عروض المطاعم والمقاهي في مكان واحد. اكتشف الصفقات المميزة واستمتع بتوفير أكبر.',
+  browseBtn:'اكتشف العروض',
+  joinBtn:'سجّل مطعمك مجاناً',
+  offersTitle:'اكتشف أقسام العروض',
+  offersDesc:'اختر القسم الذي يناسبك',
+  daily:'عروض اليوم',
+  dailyDesc:'اكتشف الصفقات اليومية المميزة.',
+  weekly:'العروض الأسبوعية',
+  weeklyDesc:'فرص توفير جديدة كل أسبوع.',
+  restaurants:'المطاعم',
+  restaurantsDesc:'عروض المطاعم والوجبات.',
+  cafes:'المقاهي',
+  cafesDesc:'القهوة والحلويات والمشروبات.',
+  joinTitle:'هل تملك مطعماً أو مقهى؟',
+  joinDesc:'انضم إلى جاب الغنانيم واعرض عروضك أمام عملاء جدد. التسجيل الأساسي مجاني.',
+  contactBtn:'تواصل معنا',
+  footerText:'كل العروض، في مكان واحد.'
+};
+
+function toggleLanguage(){
+  english = !english;
+  const data = english ? translations : arabic;
+  document.documentElement.lang = english ? 'en' : 'ar';
+  document.documentElement.dir = english ? 'ltr' : 'rtl';
+  document.querySelector('.lang').textContent = english ? 'العربية' : 'English';
+
+  Object.keys(data).forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.innerHTML = data[id];
+  });
+}
+
+document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
