@@ -246,9 +246,69 @@ function toggleLanguage(){
     const el = document.getElementById(id);
     if(el) el.innerHTML = data[id];
   });
+  if (window.renderOffersLanguage) window.renderOffersLanguage();
 }
 
 document.getElementById('year').textContent = new Date().getFullYear();
 </script>
+  
+<script type="module">
+import { getApprovedOffers } from "./firebase.js";
+
+const container = document.getElementById("offersContainer");
+const loading = document.getElementById("offersLoading");
+
+window.renderOffersLanguage = function () {
+  const english = document.documentElement.lang === "en";
+  const title = document.getElementById("liveOffersTitle");
+  if (title) title.textContent = english ? "Latest Deals" : "أحدث العروض";
+};
+
+async function displayOffers() {
+  try {
+    const offers = await getApprovedOffers();
+
+    container.innerHTML = "";
+
+    if (offers.length === 0) {
+      container.textContent =
+        document.documentElement.lang === "en"
+          ? "No approved offers yet."
+          : "لا توجد عروض معتمدة حاليًا.";
+      return;
+    }
+
+    offers.forEach(offer => {
+      const card = document.createElement("div");
+      card.className = "card";
+
+      const title = document.createElement("h3");
+      title.textContent =
+        document.documentElement.lang === "en"
+          ? (offer.title || "Special Offer")
+          : (offer.title_ar || offer.title || "عرض مميز");
+
+      const description = document.createElement("p");
+      description.textContent =
+        document.documentElement.lang === "en"
+          ? (offer.description || "")
+          : (offer.description_ar || offer.description || "");
+
+      card.appendChild(title);
+      card.appendChild(description);
+      container.appendChild(card);
+    });
+
+    window.renderOffersLanguage();
+  } catch (error) {
+    console.error("Firebase error:", error);
+    container.textContent =
+      "تعذر تحميل العروض. حاول مرة أخرى لاحقًا.";
+  }
+}
+
+displayOffers();
+</script>
+
 </body>
 </html>
