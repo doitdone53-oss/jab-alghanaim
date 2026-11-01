@@ -27,12 +27,16 @@ export const db = getFirestore(app);
 export const auth = getAuth(app);
 
 export async function getApprovedOffers() {
-  const offersQuery = query(
-    collection(db, "merchants", "XOA7nGeDY2tGdX6bXQKG", "offers"),
-    where("status", "==", "approved")
-  );
+  const offersRef = collection(
+  db,
+  "merchants",
+  "XOA7nGeDY2tGdX6bXQKG",
+  "offers"
+);
 
-  const snapshot = await getDocs(offersQuery);
+const snapshot = await getDocs(offersRef);
+
+console.log("عدد المستندات داخل المجموعة:", snapshot.size);
 
   console.log("العروض الموجودة:", snapshot.size);
 
