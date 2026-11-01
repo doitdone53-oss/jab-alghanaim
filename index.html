@@ -267,7 +267,6 @@ window.renderOffersLanguage = function () {
 async function displayOffers() {
   try {
     const offers = await getApprovedOffers();
-    alert("عدد العروض التي وجدها Firebase: " + offers.length);
 
     container.innerHTML = "";
 
