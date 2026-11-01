@@ -27,17 +27,20 @@ export const auth = getAuth(app);
 
 export async function getApprovedOffers() {
   const offersRef = collection(
-  db,
-  "merchants",
-  "XOA7nGeDY2tGdX6bXQKG",
-  "offers"
-);
+    db,
+    "merchants",
+    "XOA7nGeDY2tGdX6bXQKG",
+    "offers"
+  );
 
-const snapshot = await getDocs(offersRef);
+  const offersQuery = query(
+    offersRef,
+    where("status", "==", "approved")
+  );
 
-console.log("عدد المستندات داخل المجموعة:", snapshot.size);
+  const snapshot = await getDocs(offersQuery);
 
-  console.log("العروض الموجودة:", snapshot.size);
+  console.log("عدد العروض المعتمدة:", snapshot.size);
 
   return snapshot.docs.map(doc => ({
     id: doc.id,
