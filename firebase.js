@@ -28,11 +28,13 @@ export const auth = getAuth(app);
 
 export async function getApprovedOffers() {
   const offersQuery = query(
-    collectionGroup(db, "offers"),
+    collection(db, "merchants", "XOA7nGeDY2tGdX6bXQKG", "offers"),
     where("status", "==", "approved")
   );
 
   const snapshot = await getDocs(offersQuery);
+
+  console.log("العروض الموجودة:", snapshot.size);
 
   return snapshot.docs.map(doc => ({
     id: doc.id,
