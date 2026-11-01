@@ -32,9 +32,14 @@ export async function getApprovedOffers() {
     "offers"
   );
 
-  const snapshot = await getDocs(offersRef);
+  const offersQuery = query(
+    offersRef,
+    where("status", "==", "approved")
+  );
 
-  console.log("عدد المستندات:", snapshot.size);
+  const snapshot = await getDocs(offersQuery);
+
+  console.log("عدد العروض المعتمدة:", snapshot.size);
 
   return snapshot.docs.map(doc => ({
     id: doc.id,
