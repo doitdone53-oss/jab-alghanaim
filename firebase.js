@@ -24,23 +24,17 @@ const app = initializeApp(firebaseConfig);
 
 export const db = getFirestore(app);
 export const auth = getAuth(app);
-
 export async function getApprovedOffers() {
   const offersRef = collection(
     db,
     "merchants",
-    "XOA7nGeDY2tGdX6bXQKG",
+    "OqtjkdVgwuaAIXbCGXeY",
     "offers"
   );
 
-  const offersQuery = query(
-    offersRef,
-    where("status", "==", "approved")
-  );
+  const snapshot = await getDocs(offersRef);
 
-  const snapshot = await getDocs(offersQuery);
-
-  console.log("عدد العروض المعتمدة:", snapshot.size);
+  alert("عدد المستندات داخل المطعم: " + snapshot.size);
 
   return snapshot.docs.map(doc => ({
     id: doc.id,
