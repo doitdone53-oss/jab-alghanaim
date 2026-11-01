@@ -2,7 +2,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js";
 import {
   getFirestore,
-  collection,
+    collectionGroup,
   getDocs,
   query,
   where
@@ -28,7 +28,7 @@ export const auth = getAuth(app);
 
 export async function getApprovedOffers() {
   const offersQuery = query(
-    collection(db, "offers"),
+    collectionGroup(db, "offers"),
     where("status", "==", "approved")
   );
 
