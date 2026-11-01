@@ -301,10 +301,11 @@ async function displayOffers() {
 
     window.renderOffersLanguage();
   } catch (error) {
-    console.error("Firebase error:", error);
-    container.textContent =
-      "تعذر تحميل العروض. حاول مرة أخرى لاحقًا.";
-  }
+  console.error("Firebase error:", error);
+
+  container.textContent =
+    "خطأ Firebase: " + error.code + " - " + error.message;
+}
 }
 
 displayOffers();
