@@ -110,6 +110,63 @@ footer{
   font-size:13px;
 }
 footer span{color:var(--gold)}
+  
+.offer-card {
+  background: #101d36;
+  color: #fff;
+  border: 1px solid #d6b45c;
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 18px;
+  box-shadow: 0 5px 18px rgba(0,0,0,.12);
+  text-align: right;
+}
+
+.offer-card h3 {
+  color: #f1d27b;
+  margin-bottom: 10px;
+}
+
+.offer-card p {
+  color: #e1e5ed;
+  line-height: 1.7;
+}
+
+.offer-prices {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 18px 0;
+}
+
+.current-price {
+  color: #f5d77f;
+  font-size: 25px;
+}
+
+.offer-prices del {
+  color: #c3c8d1;
+}
+
+.discount-badge {
+  background: #d6b45c;
+  color: #101d36;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-weight: bold;
+}
+
+.offer-button {
+  display: inline-block;
+  background: #d6b45c;
+  color: #101d36;
+  padding: 11px 22px;
+  border-radius: 9px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
 </style>
 </head>
 <body>
@@ -278,26 +335,79 @@ async function displayOffers() {
       return;
     }
 
-    offers.forEach(offer => {
+      offers.forEach(offer => {
       const card = document.createElement("div");
-      card.className = "card";
+      card.className = "card offer-card";
+
+      const english = document.documentElement.lang === "en";
 
       const title = document.createElement("h3");
-      title.textContent =
-        document.documentElement.lang === "en"
-          ? (offer.title || "Special Offer")
-          : (offer.title_ar || offer.title || "عرض مميز");
+      title.textContent = english
+        ? (offer.title || "Special Offer")
+        : (offer.title_ar || offer.title || "عرض مميز");
 
       const description = document.createElement("p");
-      description.textContent =
-        document.documentElement.lang === "en"
-          ? (offer.description || "")
-          : (offer.description_ar || offer.description || "");
+      description.textContent = english
+        ? (offer.description || "")
+        : (offer.description_ar || offer.description || "");
+
+      const prices = document.createElement("div");
+      prices.className = "offer-prices";
+
+      const discountPrice = Number(offer.discountPrice);
+      const originalPrice = Number(offer.originalPrice);
+
+      const currentPrice = document.createElement("strong");
+      currentPrice.className = "current-price";
+      currentPrice.textContent =
+        Number.isFinite(discountPrice)
+          ? discountPrice.toLocaleString(english ? "en-US" : "ar-SA") +
+            (english ? " SAR" : " ر.س")
+          : "";
+
+      prices.appendChild(currentPrice);
+
+      if (
+        Number.isFinite(originalPrice) &&
+        Number.isFinite(discountPrice) &&
+        originalPrice > discountPrice &&
+        originalPrice > 0
+      ) {
+        const oldPrice = document.createElement("del");
+        oldPrice.textContent =
+          originalPrice.toLocaleString(english ? "en-US" : "ar-SA") +
+          (english ? " SAR" : " ر.س");
+
+        const discount = document.createElement("span");
+        discount.className = "discount-badge";
+        discount.textContent =
+          Math.round((originalPrice - discountPrice) / originalPrice * 100) +
+          "% " + (english ? "OFF" : "خصم");
+
+        prices.appendChild(oldPrice);
+        prices.appendChild(discount);
+      }
+
+      const button = document.createElement("a");
+      button.className = "offer-button";
+      button.textContent = english ? "View Offer" : "شاهد العرض";
+
+      if (offer.url) {
+        button.href = offer.url;
+        button.target = "_blank";
+        button.rel = "noopener noreferrer";
+      } else {
+        button.href = "#";
+        button.addEventListener("click", event => event.preventDefault());
+      }
 
       card.appendChild(title);
       card.appendChild(description);
-      container.appendChild(card);
-    });
+      card.appendChild(prices);
+      card.appendChild(button);
+
+      container.appendChild(card); });
+
 
     window.renderOffersLanguage();
   } catch (error) {
