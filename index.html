@@ -267,6 +267,7 @@ window.renderOffersLanguage = function () {
 async function displayOffers() {
   try {
     const offers = await getApprovedOffers();
+    console.log("عدد العروض المعتمدة:", offers.length, offers);
 
     container.innerHTML = "";
 
