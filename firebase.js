@@ -34,7 +34,7 @@ export async function getApprovedOffers() {
 
   const snapshot = await getDocs(offersRef);
 
-  alert("عدد المستندات داخل المطعم: " + snapshot.size);
+  console.log("عدد المستندات:", snapshot.size);
 
   return snapshot.docs.map(doc => ({
     id: doc.id,
