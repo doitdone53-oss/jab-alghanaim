@@ -2,7 +2,8 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js";
 import {
   getFirestore,
-    collectionGroup,
+  collection,
+  collectionGroup,
   getDocs,
   query,
   where
