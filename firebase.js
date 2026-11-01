@@ -5,7 +5,9 @@ import {
   collectionGroup,
   getDocs,
   query,
-  where
+  where,
+  doc,
+  getDoc
 } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-firestore.js";
 
 import {
@@ -25,24 +27,20 @@ const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
 export const auth = getAuth(app);
 export async function getApprovedOffers() {
-  const offersRef = collection(
+  const offerRef = doc(
     db,
     "merchants",
     "OqtjkdVgwuaAIXbCGXeY",
-    "offers"
+    "offers",
+    "fOiofGocdoHRzoERSxlS"
   );
 
-  const offersQuery = query(
-    offersRef,
-    where("status", "==", "approved")
-  );
+  const result = await getDoc(offerRef);
 
-  const snapshot = await getDocs(offersQuery);
+  console.log("هل وُجد العرض؟", result.exists());
+  console.log("بيانات العرض:", result.data());
 
-  console.log("عدد العروض المعتمدة:", snapshot.size);
-
-  return snapshot.docs.map(doc => ({
-    id: doc.id,
-    ...doc.data()
-  }));
+  return result.exists()
+    ? [{ id: result.id, ...result.data() }]
+    : [];
 }
