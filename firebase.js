@@ -42,6 +42,8 @@ export async function getApprovedOffers() {
   const snapshot = await getDocs(offersQuery);
 
   console.log("عدد العروض المعتمدة:", snapshot.size);
+document.getElementById("offersLoading").textContent =
+  "عدد العروض المعتمدة: " + snapshot.size;
 
   return snapshot.docs.map(doc => ({
     id: doc.id,
