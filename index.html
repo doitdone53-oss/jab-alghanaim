@@ -467,14 +467,28 @@ container.classList.add("offers-slider");
       button.className = "offer-button";
       button.textContent = english ? "View Offer" : "شاهد العرض";
 
-      if (offer.url) {
-        button.href = offer.url;
-        button.target = "_blank";
-        button.rel = "noopener noreferrer";
-      } else {
-        button.href = "#";
-        button.addEventListener("click", event => event.preventDefault());
-      }
+      button.href = "javascript:void(0)";
+button.addEventListener("click", () => {
+  document.getElementById("detailsTitle").textContent =
+    english ? offer.title : (offer.title_ar || offer.title);
+
+  document.getElementById("detailsDescription").textContent =
+    english ? offer.description : (offer.description_ar || offer.description);
+
+  document.getElementById("detailsPrice").textContent =
+    (english ? "Price: " : "السعر: ") +
+    offer.discountPrice + " " +
+    (english ? "SAR" : "ريال");
+
+  document.getElementById("detailsImage").src =
+    "images/1793604110691.jpg";
+
+  document.getElementById("offerDetails").style.display = "block";
+});
+
+document.getElementById("closeOfferDetails").onclick = () => {
+  document.getElementById("offerDetails").style.display = "none";
+};
 
       const image = document.createElement("img");
 image.src = "images/1793604110691.jpg";
