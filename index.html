@@ -82,7 +82,14 @@
   background: #f0cf7b;
 }
 
-  
+  .offer-image {
+  width: 100%;
+  height: 210px;
+  object-fit: cover;
+  border-radius: 14px;
+  margin-bottom: 16px;
+  display: block;
+}
 <style>
 :root {
   --navy:#101b35;
@@ -477,12 +484,19 @@ async function displayOffers() {
         button.addEventListener("click", event => event.preventDefault());
       }
 
-      card.appendChild(title);
-      card.appendChild(description);
-      card.appendChild(prices);
-      card.appendChild(button);
+      const image = document.createElement("img");
+image.src = "images/1793604110691.jpg";
+image.alt = english ? "Burger offer" : "عرض البرجر";
+image.className = "offer-image";
 
-      container.appendChild(card); });
+card.appendChild(image);
+card.appendChild(title);
+card.appendChild(description);
+card.appendChild(prices);
+card.appendChild(button);
+
+container.appendChild(card);
+});
 
 
     window.renderOffersLanguage();
