@@ -228,6 +228,20 @@ footer span{color:var(--gold)}
     min-width: 45%;
   }
 }
+  #offersContainer.offers-slider {
+  display: flex !important;
+  grid-template-columns: none !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  gap: 16px;
+}
+
+#offersContainer.offers-slider > .offer-card {
+  flex: 0 0 85% !important;
+  min-width: 85% !important;
+}
 </style>
 </head>
 <body>
