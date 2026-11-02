@@ -8,7 +8,41 @@
 <meta name="description" content="جاب الغنانيم - اكتشف أفضل عروض المطاعم والمقاهي اليومية والأسبوعية في السعودية.">
 <title>جاب الغنانيم | Jab Al-Ghanaim</title>
   
+/* تحويل العروض إلى شرائح قابلة للسحب */
+.offers-slider {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  gap: 16px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  padding: 12px 4px 20px;
+}
 
+.offers-slider .offer-card {
+  flex: 0 0 85%;
+  min-width: 85%;
+  scroll-snap-align: center;
+  margin-bottom: 0;
+}
+
+.offers-slider::-webkit-scrollbar {
+  height: 6px;
+}
+
+.offers-slider::-webkit-scrollbar-thumb {
+  background: #d7ad55;
+  border-radius: 10px;
+}
+
+@media (min-width: 768px) {
+  .offers-slider .offer-card {
+    flex-basis: 45%;
+    min-width: 45%;
+  }
+}
 <style>
 :root {
   --navy:#101b35;
@@ -360,7 +394,7 @@ async function displayOffers() {
           : "لا توجد عروض معتمدة حاليًا.";
       return;
     }
-
+container.classList.add("offers-slider");
       offers.forEach(offer => {
       const card = document.createElement("div");
       card.className = "card offer-card";
