@@ -135,42 +135,27 @@ import {
         password
       );
 
-      const adminRef = doc(db, "admins", result.user.uid);
-      const adminSnap = await getDoc(adminRef);
-      console.log("Admin document exists:", adminSnap.exists());
-console.log("Admin data:", adminSnap.data());
+      const adminData = adminSnap.exists()
+  ? adminSnap.data()
+  : null;
 
-      if (
-        !adminSnap.exists() ||
-        adminSnap.data().role !== "super_admin" ||
-        adminSnap.data().active !== true
-      ) {
-        await auth.signOut();
-        message.textContent = "هذا الحساب لا يملك صلاحية المدير.";
-        return;
-      }
+message.textContent =
+  "نتيجة الفحص: " +
+  "الوثيقة موجودة: " + adminSnap.exists() +
+  " | الصلاحية: " + (adminData?.role ?? "غير موجودة") +
+  " | التفعيل: " + (adminData?.active ?? "غير موجود");
 
-      message.style.color = "green";
-      message.textContent =
-        "تم التحقق بنجاح. أهلاً بك، المدير الرئيسي. سنكمل تجهيز لوحة الإدارة.";
+if (
+  !adminSnap.exists() ||
+  adminData.role !== "super_admin" ||
+  adminData.active !== true
+) {
+  await auth.signOut();
+  return;
+}
 
-    } catch (error) {
-      console.error(error);
-      message.textContent =
-        "تعذر الدخول أو التحقق من الصلاحيات. راجع الحساب وحاول مرة أخرى.";
-    }
-  });
-  document.getElementById("forgotPassword")
-  .addEventListener("click", async (event) => {
-    event.preventDefault();
-
-    const email = document.getElementById("email").value.trim();
-
-    if (!email) {
-      message.style.color = "#b91c1c";
-      message.textContent = "أدخل بريدك الإلكتروني أولاً.";
-      return;
-    }
+message.style.color = "green";
+message.textContent = "تم التحقق بنجاح. أهلاً بك، المدير الرئيسي.";
 
     try {
       await sendPasswordResetEmail(auth, email);
