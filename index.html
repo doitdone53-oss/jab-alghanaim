@@ -494,7 +494,9 @@ document.getElementById("closeOfferDetails").onclick = () => {
 image.src = offer.title === "Pizza Offer"
   ? "images/file_00000000a09c8208941fecccf495f1d2.png"
   : "images/1793604110691.jpg";
-image.alt = english ? "Burger offer" : "عرض البرجر";
+image.alt = offer.title === "Pizza Offer"
+  ? (english ? "Pizza offer" : "عرض بيتزا")
+  : (english ? "Burger offer" : "عرض البرجر");
 image.className = "offer-image";
 
 card.appendChild(image);
