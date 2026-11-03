@@ -137,6 +137,8 @@ import {
 
       const adminRef = doc(db, "admins", result.user.uid);
       const adminSnap = await getDoc(adminRef);
+      console.log("Admin document exists:", adminSnap.exists());
+console.log("Admin data:", adminSnap.data());
 
       if (
         !adminSnap.exists() ||
