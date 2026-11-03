@@ -1,0 +1,137 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101b35">
+  <title>إدارة جاب الغنايم</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f5f8;
+      color: #101b35;
+    }
+    header {
+      background: #101b35;
+      color: white;
+      padding: 22px 16px;
+      text-align: center;
+    }
+    header h1 { margin: 0 0 8px; color: #d7ad55; }
+    main {
+      max-width: 460px;
+      margin: 35px auto;
+      padding: 20px;
+    }
+    .panel {
+      background: white;
+      padding: 25px;
+      border-radius: 14px;
+      box-shadow: 0 4px 18px #00000010;
+    }
+    h2 { margin-top: 0; }
+    label { display: block; margin: 15px 0 7px; }
+    input {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+    button {
+      width: 100%;
+      margin-top: 20px;
+      padding: 14px;
+      border: 0;
+      border-radius: 8px;
+      background: #d7ad55;
+      color: #101b35;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    #message {
+      margin-top: 15px;
+      line-height: 1.7;
+      color: #b91c1c;
+    }
+    .note {
+      color: #666;
+      font-size: 14px;
+      line-height: 1.8;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>جاب الغنايم</h1>
+  <div>لوحة الإدارة</div>
+</header>
+
+<main>
+  <section class="panel">
+    <h2>تسجيل دخول المدير</h2>
+
+    <form id="loginForm">
+      <label for="email">البريد الإلكتروني</label>
+      <input id="email" type="email"
+        placeholder="أدخل البريد الإلكتروني"
+        autocomplete="username" required>
+
+      <label for="password">كلمة المرور</label>
+      <input id="password" type="password"
+        placeholder="أدخل كلمة المرور"
+        autocomplete="current-password" required>
+
+      <button type="submit">تسجيل الدخول</button>
+    </form>
+
+    <p id="message" role="status"></p>
+
+    <p class="note">
+      لوحة الإدارة قيد الإعداد. لن يتم منح صلاحيات الإدارة
+      إلا للحساب الذي يحدده المدير الرئيسي.
+    </p>
+  </section>
+</main>
+
+<script type="module">
+  import { auth } from "./firebase.js";
+  import {
+    signInWithEmailAndPassword,
+    signOut
+  } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-auth.js";
+
+  const form = document.getElementById("loginForm");
+  const message = document.getElementById("message");
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    message.textContent = "جارٍ التحقق...";
+
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+
+    try {
+      const result = await signInWithEmailAndPassword(
+        auth, email, password
+      );
+
+      await signOut(auth);
+
+      message.textContent =
+        "تم التحقق من تسجيل الدخول، لكن صلاحية المدير لم تُفعّل بعد. سنكمل إعداد الصلاحيات أولاً.";
+    } catch (error) {
+      message.textContent =
+        "تعذر تسجيل الدخول. تحقق من البريد الإلكتروني وكلمة المرور.";
+      console.error(error);
+    }
+  });
+</script>
+
+</body>
+</html>
