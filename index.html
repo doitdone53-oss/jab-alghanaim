@@ -491,7 +491,7 @@ document.getElementById("closeOfferDetails").onclick = () => {
 };
 
       const image = document.createElement("img");
-image.src = offer.title === "Pizza Offer"
+image.src = offer.image || "images/default.jpg";
   ? "images/maxresdefault.jpg"
   : "images/1793604110691.jpg";
 image.alt = offer.title === "Pizza Offer"
