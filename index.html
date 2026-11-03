@@ -489,16 +489,17 @@ button.addEventListener("click", () => {
 document.getElementById("closeOfferDetails").onclick = () => {
   document.getElementById("offerDetails").style.display = "none";
 };
+const image = 
+document.createElement("img");
+image.src = offer.image || "images/
+  1793604110691.jpg";
+        
+image.alt = english
+  ? (offer.title || "Special Offer")
+  : (offer.title_ar || offer.title || 
+     "عرض مميز");
 
-      const image = document.createElement("img");
-image.src = offer.image || "images/default.jpg";
-  ? "images/maxresdefault.jpg"
-  : "images/1793604110691.jpg";
-image.alt = offer.title === "Pizza Offer"
-  ? (english ? "Pizza offer" : "عرض بيتزا")
-  : (english ? "Burger offer" : "عرض البرجر");
 image.className = "offer-image";
-
 card.appendChild(image);
 card.appendChild(title);
 card.appendChild(description);
