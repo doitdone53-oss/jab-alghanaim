@@ -100,35 +100,56 @@
 </main>
 
 <script type="module">
-  import { auth } from "./firebase.js";
+  import { auth, db } from "./firebase.js";
+
   import {
-    signInWithEmailAndPassword,
-    signOut
+    signInWithEmailAndPassword
   } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-auth.js";
+
+  import {
+    doc,
+    getDoc
+  } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-firestore.js";
 
   const form = document.getElementById("loginForm");
   const message = document.getElementById("message");
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
-    message.textContent = "جارٍ التحقق...";
+
+    message.textContent = "جارٍ التحقق من الحساب والصلاحيات...";
 
     const email = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value;
 
     try {
       const result = await signInWithEmailAndPassword(
-        auth, email, password
+        auth,
+        email,
+        password
       );
 
-      await signOut(auth);
+      const adminRef = doc(db, "admins", result.user.uid);
+      const adminSnap = await getDoc(adminRef);
 
+      if (
+        !adminSnap.exists() ||
+        adminSnap.data().role !== "super_admin" ||
+        adminSnap.data().active !== true
+      ) {
+        await auth.signOut();
+        message.textContent = "هذا الحساب لا يملك صلاحية المدير.";
+        return;
+      }
+
+      message.style.color = "green";
       message.textContent =
-        "تم التحقق من تسجيل الدخول، لكن صلاحية المدير لم تُفعّل بعد. سنكمل إعداد الصلاحيات أولاً.";
+        "تم التحقق بنجاح. أهلاً بك، المدير الرئيسي. سنكمل تجهيز لوحة الإدارة.";
+
     } catch (error) {
-      message.textContent =
-        "تعذر تسجيل الدخول. تحقق من البريد الإلكتروني وكلمة المرور.";
       console.error(error);
+      message.textContent =
+        "تعذر الدخول أو التحقق من الصلاحيات. راجع الحساب وحاول مرة أخرى.";
     }
   });
 </script>
