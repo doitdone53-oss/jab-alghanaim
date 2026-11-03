@@ -158,6 +158,31 @@ import {
         "تعذر الدخول أو التحقق من الصلاحيات. راجع الحساب وحاول مرة أخرى.";
     }
   });
+  document.getElementById("forgotPassword")
+  .addEventListener("click", async (event) => {
+    event.preventDefault();
+
+    const email = document.getElementById("email").value.trim();
+
+    if (!email) {
+      message.style.color = "#b91c1c";
+      message.textContent = "أدخل بريدك الإلكتروني أولاً.";
+      return;
+    }
+
+    try {
+      await sendPasswordResetEmail(auth, email);
+
+      message.style.color = "green";
+      message.textContent =
+        "إذا كان البريد مسجلاً، فستصلك رسالة لإعادة تعيين كلمة المرور. تحقق من الوارد والرسائل غير المرغوب فيها.";
+    } catch (error) {
+      console.error(error);
+      message.style.color = "#b91c1c";
+      message.textContent =
+        "تعذر إرسال الرسالة. تحقق من البريد وإعدادات Firebase.";
+    }
+  });
 </script>
 
 </body>
