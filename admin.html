@@ -162,7 +162,9 @@ message.textContent = "تم تحميل كود الإدارة بنجاح";
       message.style.color = "green";
 message.textContent = "تم التحقق بنجاح. جارٍ فتح لوحة الإدارة...";
 
-window.location.replace("./admin-dashboard.html");
+setTimeout(() => {
+  window.location.href = "./admin-dashboard.html";
+}, 500);
     } catch (error) {
       console.error("Login error:", error);
 
