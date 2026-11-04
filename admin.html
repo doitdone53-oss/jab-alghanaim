@@ -155,10 +155,7 @@ message.textContent = "تم تحميل كود الإدارة بنجاح";
 
         message.style.color = "#b91c1c";
         message.textContent =
-          "الوثيقة موجودة: " + adminSnap.exists() +
-          " | الصلاحية: " + (adminData?.role ?? "غير موجودة") +
-          " | التفعيل: " + (adminData?.active ?? "غير موجود");
-
+  "بيانات الوثيقة المقروءة: " + JSON.stringify(adminData);
         return;
       }
 
