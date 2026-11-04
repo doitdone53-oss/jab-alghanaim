@@ -160,9 +160,9 @@ message.textContent = "تم تحميل كود الإدارة بنجاح";
       }
 
       message.style.color = "green";
-      message.textContent =
-        "تم التحقق بنجاح. أهلاً بك، المدير الرئيسي.";
+message.textContent = "تم التحقق بنجاح. جارٍ فتح لوحة الإدارة...";
 
+window.location.replace("./admin-dashboard.html");
     } catch (error) {
       console.error("Login error:", error);
 
