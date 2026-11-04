@@ -150,7 +150,12 @@ if (
   adminData.role !== "super_admin" ||
   adminData.active !== true
 ) {
-  await auth.signOut();
+  message.style.color = "#b91c1c";
+  message.textContent =
+    "نتيجة الفحص: الوثيقة موجودة: " + adminSnap.exists() +
+    " | الصلاحية: " + (adminData?.role ?? "غير موجودة") +
+    " | التفعيل: " + (adminData?.active ?? "غير موجود");
+
   return;
 }
 
