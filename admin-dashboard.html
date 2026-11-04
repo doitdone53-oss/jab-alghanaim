@@ -1,0 +1,288 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101b35">
+  <title>لوحة إدارة جاب الغنايم</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 20px;
+      background: #f3f5f9;
+      color: #17233d;
+      font-family: Arial, sans-serif;
+    }
+    header {
+      background: #101b35;
+      color: white;
+      padding: 22px;
+      border-radius: 16px;
+      margin-bottom: 20px;
+    }
+    header h1 { margin: 0 0 8px; font-size: 23px; }
+    header p { margin: 0; color: #d8deea; }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+    .stat, .section {
+      background: white;
+      padding: 17px;
+      border-radius: 13px;
+      box-shadow: 0 2px 9px #0000000b;
+    }
+    .stat span { display: block; color: #68748a; font-size: 14px; }
+    .stat strong { display: block; font-size: 27px; margin-top: 8px; }
+    .section { margin-bottom: 20px; }
+    h2 { font-size: 19px; margin-top: 0; }
+    .item {
+      border: 1px solid #e5e9f0;
+      padding: 13px;
+      border-radius: 10px;
+      margin-top: 10px;
+      overflow-wrap: anywhere;
+    }
+    .item strong { display: block; margin-bottom: 7px; }
+    .muted { color: #68748a; font-size: 13px; line-height: 1.8; }
+    .status { color: #a16207; font-weight: bold; }
+    button {
+      border: 0;
+      border-radius: 9px;
+      padding: 11px 15px;
+      cursor: pointer;
+      font-size: 14px;
+      margin: 4px;
+    }
+    .refresh { background: #b38b35; color: white; }
+    .logout { background: #fff; color: #101b35; }
+    #message { margin: 12px 0; line-height: 1.8; }
+    .empty { color: #68748a; padding: 10px 0; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>لوحة إدارة جاب الغنايم</h1>
+  <p>مرحبًا بك، المدير الرئيسي</p>
+  <button class="refresh" id="refreshBtn">تحديث البيانات</button>
+  <button class="logout" id="logoutBtn">تسجيل الخروج</button>
+</header>
+
+<p id="message">جارٍ التحقق من صلاحيات المدير...</p>
+
+<div class="stats">
+  <div class="stat">
+    <span>إجمالي المطاعم والمقاهي</span>
+    <strong id="merchantCount">—</strong>
+  </div>
+  <div class="stat">
+    <span>طلبات التسجيل المعلقة</span>
+    <strong id="pendingMerchantCount">—</strong>
+  </div>
+  <div class="stat">
+    <span>إجمالي العروض</span>
+    <strong id="offerCount">—</strong>
+  </div>
+  <div class="stat">
+    <span>العروض المعلقة</span>
+    <strong id="pendingOfferCount">—</strong>
+  </div>
+</div>
+
+<section class="section">
+  <h2>المطاعم والمقاهي</h2>
+  <div id="merchantsList" class="empty">جارٍ تحميل البيانات...</div>
+</section>
+
+<section class="section">
+  <h2>العروض</h2>
+  <div id="offersList" class="empty">جارٍ تحميل البيانات...</div>
+</section>
+
+<script type="module">
+  import { auth, db } from "./firebase.js";
+
+  import {
+    onAuthStateChanged,
+    signOut
+  } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-auth.js";
+
+  import {
+    collection,
+    doc,
+    getDoc,
+    getDocs
+  } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-firestore.js";
+
+  const message = document.getElementById("message");
+  const merchantsList = document.getElementById("merchantsList");
+  const offersList = document.getElementById("offersList");
+
+  let authorized = false;
+
+  function addItem(container, title, details) {
+    const card = document.createElement("div");
+    card.className = "item";
+
+    const heading = document.createElement("strong");
+    heading.textContent = title;
+
+    const description = document.createElement("div");
+    description.className = "muted";
+    description.textContent = details;
+
+    card.appendChild(heading);
+    card.appendChild(description);
+    container.appendChild(card);
+  }
+
+  async function loadDashboard() {
+    message.textContent = "جارٍ تحميل بيانات المنصة...";
+    merchantsList.textContent = "جارٍ التحميل...";
+    offersList.textContent = "جارٍ التحميل...";
+
+    try {
+      const merchantsSnapshot = await getDocs(
+        collection(db, "merchants")
+      );
+
+      let pendingMerchants = 0;
+      let totalOffers = 0;
+      let pendingOffers = 0;
+
+      merchantsList.replaceChildren();
+      offersList.replaceChildren();
+
+      const merchants = merchantsSnapshot.docs;
+
+      for (const merchantDoc of merchants) {
+        const merchant = merchantDoc.data();
+        const name =
+          merchant.name_ar ||
+          merchant.name ||
+          "مطعم أو مقهى بدون اسم";
+
+        const status = merchant.status || "غير محدد";
+
+        if (status === "pending") pendingMerchants++;
+
+        addItem(
+          merchantsList,
+          name,
+          "المدينة: " + (merchant.city || "غير محددة") +
+          " | الحالة: " + status +
+          " | المعرّف: " + merchantDoc.id
+        );
+
+        const offersSnapshot = await getDocs(
+          collection(db, "merchants", merchantDoc.id, "offers")
+        );
+
+        for (const offerDoc of offersSnapshot.docs) {
+          const offer = offerDoc.data();
+          totalOffers++;
+
+          if (offer.status === "pending") pendingOffers++;
+
+          const offerName =
+            offer.title_ar ||
+            offer.title ||
+            offer.name_ar ||
+            offer.name ||
+            "عرض بدون عنوان";
+
+          addItem(
+            offersList,
+            offerName,
+            "المطعم: " + name +
+            " | الحالة: " + (offer.status || "غير محددة") +
+            " | المعرّف: " + offerDoc.id
+          );
+        }
+      }
+
+      document.getElementById("merchantCount").textContent =
+        merchants.length;
+
+      document.getElementById("pendingMerchantCount").textContent =
+        pendingMerchants;
+
+      document.getElementById("offerCount").textContent =
+        totalOffers;
+
+      document.getElementById("pendingOfferCount").textContent =
+        pendingOffers;
+
+      if (merchants.length === 0) {
+        merchantsList.textContent = "لا توجد مطاعم أو مقاهٍ حاليًا.";
+      }
+
+      if (totalOffers === 0) {
+        offersList.textContent = "لا توجد عروض حاليًا.";
+      }
+
+      message.textContent = "تم تحميل البيانات بنجاح.";
+    } catch (error) {
+      console.error("Dashboard error:", error);
+      message.textContent =
+        "تعذر تحميل البيانات. رمز الخطأ: " +
+        (error.code || error.message);
+    }
+  }
+
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+      window.location.replace("./admin.html");
+      return;
+    }
+
+    try {
+      const adminRef = doc(db, "admins", user.uid);
+      const adminSnap = await getDoc(adminRef);
+
+      if (!adminSnap.exists()) {
+        await signOut(auth);
+        window.location.replace("./admin.html");
+        return;
+      }
+
+      const adminData = adminSnap.data();
+
+      if (
+        adminData.role !== "super_admin" ||
+        adminData.active !== true
+      ) {
+        await signOut(auth);
+        window.location.replace("./admin.html");
+        return;
+      }
+
+      authorized = true;
+      await loadDashboard();
+
+    } catch (error) {
+      console.error("Admin verification error:", error);
+      message.textContent =
+        "تعذر التحقق من صلاحيات المدير: " +
+        (error.code || error.message);
+    }
+  });
+
+  document.getElementById("refreshBtn").addEventListener("click", () => {
+    if (authorized) loadDashboard();
+  });
+
+  document.getElementById("logoutBtn").addEventListener("click", async () => {
+    await signOut(auth);
+    window.location.replace("./admin.html");
+  });
+</script>
+
+</body>
+  </html>
+  
